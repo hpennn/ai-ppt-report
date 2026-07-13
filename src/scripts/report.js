@@ -1,3 +1,4 @@
+import { streamChat } from '../utils/ai';
 // ========================================
 // Report Generator - Client Script
 // ========================================
@@ -102,57 +103,93 @@ async function generateReport() {
   currentMarkdown = '';
 
   try {
-    const res = await fetch('/api/report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        reportType: currentReportType,
-        points,
-        style,
-        plan,
-        problems,
-        support
-      })
-    });
+    const typeMap = { weekly: '周报', monthly: '月报', quarterly: '季度工作总结', yearly: '年度工作总结' };
+    const styleMap = {
+      structured: `结构化风格：
+- 使用清晰的标题层级（一级标题、二级标题）
+- 每个工作项用"标题 + 要点 + 数据/成果"的格式
+- 使用有序/无序列表组织内容
+- 数据用加粗突出
+- 段落之间逻辑清晰，层次分明`,
+      natural: `自然表达风格：
+- 用流畅的段落叙述，而非列表
+- 口语化但保持专业性
+- 适当使用过渡词和连接句
+- 像在和领导面对面交流
+- 语气温和自信，不卑不亢`,
+      upward: `向上管理风格：
+- 开头先总结核心成果和价值
+- 突出对团队/公司的贡献和影响
+- 用数据和成果说话，弱化过程描述
+- 问题部分转化为"改进方向"和"优化空间"
+- 展现主动思考和全局视角
+- 适当体现工作的难度和自身的努力`,
+      okr: `OKR 风格：
+- 格式：Objective → Key Results → 进展
+- 每个目标下明确关键结果（可量化的指标）
+- 用进度百分比展示完成度
+- 标注超额完成/达成/未达的情况
+- 分析差距原因和下阶段策略`,
+      star: `STAR 风格：
+- 每项重要工作用 STAR 结构描述
+- Situation（情境）：背景是什么
+- Task（任务）：我的任务/目标是什么
+- Action（行动）：我采取了什么行动
+- Result（结果）：取得了什么成果（用数据说明）
+- 突出个人贡献和关键决策`
+    };
 
-    if (!res.ok) {
-      const errData = await res.json();
-      showToast('生成失败：' + (errData.error || '未知错误'));
-      rendered.innerHTML = '';
-      return;
-    }
+    const typeDesc = typeMap[currentReportType] || '周报';
+    const styleDesc = styleMap[style] || styleMap.structured;
 
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
+    const systemPrompt = `你是一个专业的工作汇报撰写助手。请根据用户提供的工作内容要点，生成一份高质量的工作汇报。
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+汇报类型：${typeDesc}
+表达风格要求：
+${styleDesc}
 
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
+要求：
+1. 输出格式为 Markdown
+2. 内容要专业、真实、有深度
+3. 适当补充合理的细节和数据（用 [数据] 标注需要用户填写的占位符）
+4. 语言流畅，符合职场表达习惯
+5. 不要输出与汇报内容无关的说明文字
+6. 直接输出汇报正文，不需要额外的解释`;
 
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6).trim();
-          if (data === '[DONE]') continue;
-          try {
-            const json = JSON.parse(data);
-            if (json.content) {
-              currentMarkdown += json.content;
-              rendered.innerHTML = renderMarkdown(currentMarkdown);
-            }
-          } catch {}
+    let userPrompt = `请帮我写一份${typeDesc}。
+
+工作内容要点：
+${points.map((p, i) => `${i + 1}. ${p}`).join('\n')}`;
+
+    if (plan) userPrompt += `\n\n下期计划：\n${plan}`;
+    if (problems) userPrompt += `\n\n遇到的问题：\n${problems}`;
+    if (support) userPrompt += `\n\n需要的支持：\n${support}`;
+
+    await new Promise((resolve) => {
+      streamChat(
+        [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        {
+          onChunk: (text) => {
+            currentMarkdown += text;
+            rendered.innerHTML = renderMarkdown(currentMarkdown);
+          },
+          onDone: () => {
+            rendered.innerHTML = renderMarkdown(currentMarkdown);
+            updateStyleSwitcher();
+            showToast('汇报生成完成');
+            resolve();
+          },
+          onError: (err) => {
+            showToast('生成失败：' + err);
+            rendered.innerHTML = '';
+            resolve();
+          }
         }
-      }
-    }
-
-    // Final render
-    rendered.innerHTML = renderMarkdown(currentMarkdown);
-    updateStyleSwitcher();
-    showToast('汇报生成完成');
+      );
+    });
 
   } catch (err) {
     showToast('请求失败：' + err.message);
@@ -184,54 +221,90 @@ function switchStyle(style) {
   const rendered = document.getElementById('report-rendered');
   currentMarkdown = '';
   
-  fetch('/api/report', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(lastInputData)
-  }).then(res => {
-    if (!res.ok) throw new Error('请求失败');
-    
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    
-    function read() {
-      reader.read().then(({ done, value }) => {
-        if (done) {
-          btn.disabled = false;
-          btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> 生成汇报';
-          updateStyleSwitcher();
-          return;
-        }
-        
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
-        
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6).trim();
-            if (data === '[DONE]') continue;
-            try {
-              const json = JSON.parse(data);
-              if (json.content) {
-                currentMarkdown += json.content;
-                rendered.innerHTML = renderMarkdown(currentMarkdown);
-              }
-            } catch {}
-          }
-        }
-        
-        read();
-      });
+  const typeMap2 = { weekly: '周报', monthly: '月报', quarterly: '季度工作总结', yearly: '年度工作总结' };
+  const styleMap2 = {
+    structured: `结构化风格：
+- 使用清晰的标题层级（一级标题、二级标题）
+- 每个工作项用"标题 + 要点 + 数据/成果"的格式
+- 使用有序/无序列表组织内容
+- 数据用加粗突出
+- 段落之间逻辑清晰，层次分明`,
+    natural: `自然表达风格：
+- 用流畅的段落叙述，而非列表
+- 口语化但保持专业性
+- 适当使用过渡词和连接句
+- 像在和领导面对面交流
+- 语气温和自信，不卑不亢`,
+    upward: `向上管理风格：
+- 开头先总结核心成果和价值
+- 突出对团队/公司的贡献和影响
+- 用数据和成果说话，弱化过程描述
+- 问题部分转化为"改进方向"和"优化空间"
+- 展现主动思考和全局视角
+- 适当体现工作的难度和自身的努力`,
+    okr: `OKR 风格：
+- 格式：Objective → Key Results → 进展
+- 每个目标下明确关键结果（可量化的指标）
+- 用进度百分比展示完成度
+- 标注超额完成/达成/未达的情况
+- 分析差距原因和下阶段策略`,
+    star: `STAR 风格：
+- 每项重要工作用 STAR 结构描述
+- Situation（情境）：背景是什么
+- Task（任务）：我的任务/目标是什么
+- Action（行动）：我采取了什么行动
+- Result（结果）：取得了什么成果（用数据说明）
+- 突出个人贡献和关键决策`
+  };
+
+  const typeDesc2 = typeMap2[currentReportType] || '周报';
+  const styleDesc2 = styleMap2[style] || styleMap2.structured;
+
+  const sysPrompt2 = `你是一个专业的工作汇报撰写助手。请根据用户提供的工作内容要点，生成一份高质量的工作汇报。
+
+汇报类型：${typeDesc2}
+表达风格要求：
+${styleDesc2}
+
+要求：
+1. 输出格式为 Markdown
+2. 内容要专业、真实、有深度
+3. 适当补充合理的细节和数据（用 [数据] 标注需要用户填写的占位符）
+4. 语言流畅，符合职场表达习惯
+5. 不要输出与汇报内容无关的说明文字
+6. 直接输出汇报正文，不需要额外的解释`;
+
+  let usrPrompt2 = `请帮我写一份${typeDesc2}。
+
+工作内容要点：
+${lastInputData.points.map((p, i) => `${i + 1}. ${p}`).join('\n')}`;
+
+  if (lastInputData.plan) usrPrompt2 += `\n\n下期计划：\n${lastInputData.plan}`;
+  if (lastInputData.problems) usrPrompt2 += `\n\n遇到的问题：\n${lastInputData.problems}`;
+  if (lastInputData.support) usrPrompt2 += `\n\n需要的支持：\n${lastInputData.support}`;
+
+  streamChat(
+    [
+      { role: 'system', content: sysPrompt2 },
+      { role: 'user', content: usrPrompt2 }
+    ],
+    {
+      onChunk: (text) => {
+        currentMarkdown += text;
+        rendered.innerHTML = renderMarkdown(currentMarkdown);
+      },
+      onDone: () => {
+        btn.disabled = false;
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> 生成汇报';
+        updateStyleSwitcher();
+      },
+      onError: (err) => {
+        showToast('切换失败：' + err);
+        btn.disabled = false;
+        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> 生成汇报';
+      }
     }
-    
-    read();
-  }).catch(err => {
-    showToast('切换失败：' + err.message);
-    btn.disabled = false;
-    btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> 生成汇报';
-  });
+  );
   
   updateStyleSwitcher();
 }

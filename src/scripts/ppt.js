@@ -1,3 +1,4 @@
+import { chatJSON } from '../utils/ai';
 // ========================================
 // PPT Generator - Client Script
 // ========================================
@@ -48,21 +49,68 @@ async function startGeneration() {
   setGenerating(true);
 
   try {
-    const res = await fetch('/api/ppt', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        topic,
-        pageCount,
-        style: selectedStyle,
-        description,
-        step: 'outline'
-      })
-    });
+    const styleMap = {
+      business: '商务简约风格，沉稳专业，适合正式场合',
+      tech: '科技蓝色风格，现代感强，适合技术/互联网行业',
+      fresh: '清新绿色风格，自然活力，适合创意/环保/健康主题',
+      vibrant: '活力橙色风格，热情积极，适合营销/团建/活动',
+      academic: '学术风格，严谨规范，适合学术/教育/研究场景'
+    };
+    const styleDesc = styleMap[selectedStyle] || styleMap.business;
 
-    const data = await res.json();
-    if (data.error) {
-      showToast('生成失败：' + data.error);
+    const systemPrompt = `你是一个专业的 PPT 策划师。根据用户提供的主题和要求，生成 PPT 大纲。
+你必须严格输出 JSON 格式，不要输出任何其他内容（不要用 markdown 代码块包裹）。
+
+JSON 格式如下：
+{
+  "title": "PPT整体标题",
+  "slides": [
+    {
+      "type": "cover",
+      "title": "封面标题",
+      "subtitle": "副标题/日期/汇报人"
+    },
+    {
+      "type": "content",
+      "title": "页面标题",
+      "points": ["要点1", "要点2", "要点3"],
+      "notes": "演讲备注（50字以内）"
+    },
+    {
+      "type": "summary",
+      "title": "总结与展望",
+      "points": ["关键结论1", "关键结论2", "下一步计划"]
+    },
+    {
+      "type": "end",
+      "title": "谢谢",
+      "subtitle": "Q&A"
+    }
+  ]
+}
+
+要求：
+1. 必须包含封面页(cover)和结束页(end)
+2. 内容页类型为 content
+3. 最后一页内容页之后是 summary，然后是 end
+4. 每页要点 3-5 个，简洁有力
+5. 总页数严格等于用户要求的页数
+6. 内容专业、有深度、逻辑清晰`;
+
+    const userPrompt = `请为以下主题生成 PPT 大纲：
+主题：${topic}
+页数：${pageCount}页
+风格：${styleDesc}
+额外要求：${description || '无'}`;
+
+    let data;
+    try {
+      data = await chatJSON([
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ]);
+    } catch (err) {
+      showToast('生成失败：' + err.message);
       return;
     }
 
@@ -91,22 +139,77 @@ async function generateFullPPT() {
     const pageCount = parseInt(document.getElementById('ppt-pages').value);
     const description = document.getElementById('ppt-desc').value.trim();
 
-    const res = await fetch('/api/ppt', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        topic,
-        pageCount,
-        style: selectedStyle,
-        description,
-        step: 'full',
-        outline: outlineData
-      })
-    });
+    const styleMap2 = {
+      business: '商务简约风格，沉稳专业，适合正式场合',
+      tech: '科技蓝色风格，现代感强，适合技术/互联网行业',
+      fresh: '清新绿色风格，自然活力，适合创意/环保/健康主题',
+      vibrant: '活力橙色风格，热情积极，适合营销/团建/活动',
+      academic: '学术风格，严谨规范，适合学术/教育/研究场景'
+    };
+    const styleDesc2 = styleMap2[selectedStyle] || styleMap2.business;
 
-    const data = await res.json();
-    if (data.error) {
-      showToast('生成失败：' + data.error);
+    const systemPrompt2 = `你是一个专业的 PPT 内容策划师。根据已确认的大纲，为每一页生成详细内容。
+你必须严格输出 JSON 格式，不要输出任何其他内容（不要用 markdown 代码块包裹）。
+
+JSON 格式如下：
+{
+  "title": "PPT整体标题",
+  "slides": [
+    {
+      "type": "cover",
+      "title": "封面标题",
+      "subtitle": "副标题"
+    },
+    {
+      "type": "content",
+      "title": "页面标题",
+      "points": [
+        {"text": "要点文字", "detail": "详细说明（可选）"}
+      ],
+      "notes": "演讲备注"
+    },
+    {
+      "type": "data",
+      "title": "数据页标题",
+      "points": [
+        {"label": "指标名", "value": "数值", "trend": "up/down/flat"}
+      ],
+      "notes": "演讲备注"
+    },
+    {
+      "type": "summary",
+      "title": "总结",
+      "points": ["关键结论1", "关键结论2"]
+    },
+    {
+      "type": "end",
+      "title": "谢谢",
+      "subtitle": "Q&A"
+    }
+  ]
+}
+
+要求：
+1. 保持大纲的结构，丰富每页内容
+2. 要点文字要具体、有数据支撑
+3. 每页要点 3-5 个
+4. 内容页可以包含数据展示建议
+5. 内容专业、逻辑清晰、有说服力`;
+
+    const userPrompt2 = `请根据以下大纲生成详细的 PPT 内容：
+${JSON.stringify(outlineData)}
+
+风格：${styleDesc2}
+要求：输出完整的 JSON 格式内容`;
+
+    let data;
+    try {
+      data = await chatJSON([
+        { role: 'system', content: systemPrompt2 },
+        { role: 'user', content: userPrompt2 }
+      ]);
+    } catch (err) {
+      showToast('生成失败：' + err.message);
       return;
     }
 

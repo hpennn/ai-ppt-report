@@ -1,4 +1,3 @@
-import { streamChat } from '../utils/ai';
 // ========================================
 // Report Generator - Client Script
 // ========================================
@@ -10,6 +9,63 @@ let currentMarkdown = '';
 let isEditing = false;
 let isGenerating = false;
 let lastInputData = null;
+
+
+// Server API SSE helper
+async function streamFromServer(systemPrompt, userPrompt, callbacks) {
+  const response = await fetch('/api/report', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: systemPrompt + '\n\n' + userPrompt })
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    callbacks.onError(errData.error || `API request failed: ${response.status}`);
+    return;
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let fullText = '';
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split('\n');
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') {
+            callbacks.onDone(fullText);
+            return;
+          }
+          try {
+            const json = JSON.parse(data);
+            if (json.error) {
+              callbacks.onError(json.error);
+              return;
+            }
+            const delta = json.text || '';
+            if (delta) {
+              fullText += delta;
+              callbacks.onChunk(delta);
+            }
+          } catch {
+            // Skip malformed data
+          }
+        }
+      }
+    }
+    callbacks.onDone(fullText);
+  } catch (err) {
+    callbacks.onError(err.message || 'Network error');
+  }
+}
 
 // ========================================
 // Report Type Selection
@@ -166,11 +222,9 @@ ${points.map((p, i) => `${i + 1}. ${p}`).join('\n')}`;
     if (support) userPrompt += `\n\n需要的支持：\n${support}`;
 
     await new Promise((resolve) => {
-      streamChat(
-        [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
+      streamFromServer(
+        systemPrompt,
+        userPrompt,
         {
           onChunk: (text) => {
             currentMarkdown += text;
@@ -283,11 +337,9 @@ ${lastInputData.points.map((p, i) => `${i + 1}. ${p}`).join('\n')}`;
   if (lastInputData.problems) usrPrompt2 += `\n\n遇到的问题：\n${lastInputData.problems}`;
   if (lastInputData.support) usrPrompt2 += `\n\n需要的支持：\n${lastInputData.support}`;
 
-  streamChat(
-    [
-      { role: 'system', content: sysPrompt2 },
-      { role: 'user', content: usrPrompt2 }
-    ],
+  streamFromServer(
+    sysPrompt2,
+    usrPrompt2,
     {
       onChunk: (text) => {
         currentMarkdown += text;

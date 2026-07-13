@@ -1,4 +1,3 @@
-import { chatJSON } from '../utils/ai';
 // ========================================
 // PPT Generator - Client Script
 // ========================================
@@ -10,6 +9,21 @@ let pptData = null;
 let outlineData = null;
 let isPresenting = false;
 let selectedStyle = 'business';
+
+
+// Server API helper
+async function callAPI(prompt) {
+  const response = await fetch('/api/ppt', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt })
+  });
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(errData.error || `API request failed: ${response.status}`);
+  }
+  return await response.json();
+}
 
 // ========================================
 // Style Selection
@@ -105,10 +119,7 @@ JSON 格式如下：
 
     let data;
     try {
-      data = await chatJSON([
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ]);
+      data = await callAPI(systemPrompt + '\n\n' + userPrompt);
     } catch (err) {
       showToast('生成失败：' + err.message);
       return;
@@ -204,10 +215,7 @@ ${JSON.stringify(outlineData)}
 
     let data;
     try {
-      data = await chatJSON([
-        { role: 'system', content: systemPrompt2 },
-        { role: 'user', content: userPrompt2 }
-      ]);
+      data = await callAPI(systemPrompt2 + '\n\n' + userPrompt2);
     } catch (err) {
       showToast('生成失败：' + err.message);
       return;

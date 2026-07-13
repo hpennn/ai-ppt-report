@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="工作汇报生成器 - AI PPT & 汇报生成器">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 no-print sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-smooth">
+          <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-700 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <span class="font-bold text-gray-900">工作汇报生成器</span>
+        </a>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="/ppt" class="text-sm text-gray-500 hover:text-gray-700 px-2 py-1.5">← PPT 生成</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
+    <!-- Input Section -->
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 no-print">
+      <h2 class="text-lg font-bold text-gray-900 mb-5">📝 汇报配置</h2>
+
+      <div class="grid md:grid-cols-2 gap-5 mb-5">
+        <!-- Report Type -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">汇报类型</label>
+          <div class="grid grid-cols-4 gap-2">
+            <button onclick="selectReportType('weekly')" class="report-type-btn active px-3 py-2 text-sm rounded-lg border-2 border-emerald-500 bg-emerald-50 text-emerald-700 font-medium" data-type="weekly">周报</button>
+            <button onclick="selectReportType('monthly')" class="report-type-btn px-3 py-2 text-sm rounded-lg border-2 border-transparent bg-gray-50 text-gray-600 hover:border-gray-300" data-type="monthly">月报</button>
+            <button onclick="selectReportType('quarterly')" class="report-type-btn px-3 py-2 text-sm rounded-lg border-2 border-transparent bg-gray-50 text-gray-600 hover:border-gray-300" data-type="quarterly">季度总结</button>
+            <button onclick="selectReportType('yearly')" class="report-type-btn px-3 py-2 text-sm rounded-lg border-2 border-transparent bg-gray-50 text-gray-600 hover:border-gray-300" data-type="yearly">年度总结</button>
+          </div>
+        </div>
+
+        <!-- Style -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">表达风格</label>
+          <select id="report-style" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none">
+            <option value="structured">结构化 - 标题+要点+数据</option>
+            <option value="natural">自然表达 - 口语化但专业</option>
+            <option value="upward">向上管理 - 突出成果和价值</option>
+            <option value="okr">OKR - 目标-关键结果-进展</option>
+            <option value="star">STAR - 情境-任务-行动-结果</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Work Points -->
+      <div class="mb-5">
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">工作内容要点 *</label>
+        <div id="points-container" class="space-y-2 mb-2">
+          <div class="flex gap-2">
+            <input type="text" placeholder="输入工作要点，如：完成用户增长系统优化" class="point-input flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" />
+            <button onclick="removePoint(this)" class="p-2 text-gray-400 hover:text-red-500 transition-smooth hidden">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+        <button onclick="addPoint()" class="flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700 font-medium">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          添加要点
+        </button>
+      </div>
+
+      <!-- Extra Info -->
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">下周/下期计划</label>
+          <textarea id="report-plan" rows="3" placeholder="下周的工作计划..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">遇到的问题</label>
+          <textarea id="report-problems" rows="3" placeholder="遇到的困难或问题..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">需要的支持</label>
+          <textarea id="report-support" rows="3" placeholder="需要的资源或支持..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Generate Button -->
+      <button id="btn-gen-report" onclick="generateReport()" class="w-full py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-smooth flex items-center justify-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        生成汇报
+      </button>
+    </div>
+
+    <!-- Result Section -->
+    <div id="result-section" class="hidden">
+      <!-- Action Bar -->
+      <div class="bg-white rounded-t-2xl border border-b-0 border-gray-200 px-6 py-3 flex items-center justify-between no-print">
+        <div class="flex items-center gap-3">
+          <h3 class="font-bold text-gray-900">📄 生成结果</h3>
+          <div id="style-switcher" class="flex items-center gap-1 ml-4">
+            <span class="text-xs text-gray-500">切换风格：</span>
+            <button onclick="switchStyle('structured')" class="style-switch-btn px-2 py-1 text-xs rounded border border-emerald-500 bg-emerald-50 text-emerald-700" data-style="structured">结构化</button>
+            <button onclick="switchStyle('natural')" class="style-switch-btn px-2 py-1 text-xs rounded border border-transparent text-gray-500 hover:bg-gray-100" data-style="natural">自然</button>
+            <button onclick="switchStyle('upward')" class="style-switch-btn px-2 py-1 text-xs rounded border border-transparent text-gray-500 hover:bg-gray-100" data-style="upward">向上管理</button>
+            <button onclick="switchStyle('okr')" class="style-switch-btn px-2 py-1 text-xs rounded border border-transparent text-gray-500 hover:bg-gray-100" data-style="okr">OKR</button>
+            <button onclick="switchStyle('star')" class="style-switch-btn px-2 py-1 text-xs rounded border border-transparent text-gray-500 hover:bg-gray-100" data-style="star">STAR</button>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleEdit()" id="btn-edit" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-smooth flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            编辑
+          </button>
+          <button onclick="copyReport()" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-smooth flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            复制
+          </button>
+          <button onclick="exportMarkdown()" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-smooth flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Markdown
+          </button>
+          <button onclick="exportWord()" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-smooth flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            Word
+          </button>
+          <button onclick="window.print()" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-smooth flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            打印
+          </button>
+        </div>
+      </div>
+
+      <!-- Report Content -->
+      <div class="bg-white rounded-b-2xl border border-gray-200 p-8 min-h-[400px]">
+        <div id="report-rendered" class="prose prose-sm max-w-none"></div>
+        <textarea id="report-editor" class="hidden w-full min-h-[400px] p-4 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none"></textarea>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm shadow-lg transform translate-y-20 opacity-0 transition-smooth z-50"></div>
+
+  <script src="../scripts/report.js"></script>
+</Layout>

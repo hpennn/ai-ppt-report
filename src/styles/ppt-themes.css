@@ -1,0 +1,431 @@
+/* ========================================
+   PPT Theme Definitions
+   ======================================== */
+
+/* Base slide styles */
+.ppt-slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.4s ease;
+}
+
+/* ========================================
+   Theme 1: Business (商务简约)
+   ======================================== */
+.theme-business .slide-cover {
+  background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #2b6cb0 100%);
+  color: white;
+}
+.theme-business .slide-content {
+  background: #ffffff;
+  color: #1a202c;
+}
+.theme-business .slide-content .slide-header {
+  background: #1a365d;
+  color: white;
+}
+.theme-business .slide-summary {
+  background: linear-gradient(135deg, #ebf4ff 0%, #ffffff 100%);
+  color: #1a202c;
+}
+.theme-business .slide-end {
+  background: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+  color: white;
+}
+.theme-business .accent { color: #2b6cb0; }
+.theme-business .accent-bg { background: #2b6cb0; }
+.theme-business .accent-border { border-color: #2b6cb0; }
+.theme-business .point-bullet { background: #2b6cb0; }
+
+/* ========================================
+   Theme 2: Tech (科技蓝)
+   ======================================== */
+.theme-tech .slide-cover {
+  background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 30%, #0d47a1 70%, #1565c0 100%);
+  color: white;
+}
+.theme-tech .slide-content {
+  background: #f8fafc;
+  color: #0f172a;
+}
+.theme-tech .slide-content .slide-header {
+  background: linear-gradient(90deg, #0d47a1, #1565c0);
+  color: white;
+}
+.theme-tech .slide-summary {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f8fafc 100%);
+  color: #0f172a;
+}
+.theme-tech .slide-end {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+  color: white;
+}
+.theme-tech .accent { color: #0d47a1; }
+.theme-tech .accent-bg { background: #0d47a1; }
+.theme-tech .accent-border { border-color: #0d47a1; }
+.theme-tech .point-bullet { background: #0d47a1; }
+
+/* ========================================
+   Theme 3: Fresh (清新绿)
+   ======================================== */
+.theme-fresh .slide-cover {
+  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #43a047 100%);
+  color: white;
+}
+.theme-fresh .slide-content {
+  background: #ffffff;
+  color: #1a2e1a;
+}
+.theme-fresh .slide-content .slide-header {
+  background: linear-gradient(90deg, #1b5e20, #388e3c);
+  color: white;
+}
+.theme-fresh .slide-summary {
+  background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+  color: #1a2e1a;
+}
+.theme-fresh .slide-end {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+}
+.theme-fresh .accent { color: #2e7d32; }
+.theme-fresh .accent-bg { background: #2e7d32; }
+.theme-fresh .accent-border { border-color: #2e7d32; }
+.theme-fresh .point-bullet { background: #2e7d32; }
+
+/* ========================================
+   Theme 4: Vibrant (活力橙)
+   ======================================== */
+.theme-vibrant .slide-cover {
+  background: linear-gradient(135deg, #e65100 0%, #f57c00 50%, #ff9800 100%);
+  color: white;
+}
+.theme-vibrant .slide-content {
+  background: #ffffff;
+  color: #2d1800;
+}
+.theme-vibrant .slide-content .slide-header {
+  background: linear-gradient(90deg, #e65100, #f57c00);
+  color: white;
+}
+.theme-vibrant .slide-summary {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+  color: #2d1800;
+}
+.theme-vibrant .slide-end {
+  background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+  color: white;
+}
+.theme-vibrant .accent { color: #e65100; }
+.theme-vibrant .accent-bg { background: #e65100; }
+.theme-vibrant .accent-border { border-color: #e65100; }
+.theme-vibrant .point-bullet { background: #e65100; }
+
+/* ========================================
+   Theme 5: Academic (学术风)
+   ======================================== */
+.theme-academic .slide-cover {
+  background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+  color: white;
+}
+.theme-academic .slide-content {
+  background: #fafafa;
+  color: #1a1a2e;
+}
+.theme-academic .slide-content .slide-header {
+  background: #1a237e;
+  color: white;
+}
+.theme-academic .slide-summary {
+  background: linear-gradient(135deg, #e8eaf6 0%, #fafafa 100%);
+  color: #1a1a2e;
+}
+.theme-academic .slide-end {
+  background: linear-gradient(135deg, #283593 0%, #1a237e 100%);
+  color: white;
+}
+.theme-academic .accent { color: #283593; }
+.theme-academic .accent-bg { background: #283593; }
+.theme-academic .accent-border { border-color: #283593; }
+.theme-academic .point-bullet { background: #283593; }
+
+/* ========================================
+   Slide Type: Cover
+   ======================================== */
+.slide-cover {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem;
+}
+.slide-cover .cover-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+.slide-cover .cover-subtitle {
+  font-size: 1.2rem;
+  opacity: 0.85;
+  font-weight: 300;
+}
+.slide-cover .cover-decoration {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255,255,255,0.3);
+}
+.slide-cover .cover-dots {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 8px);
+  gap: 6px;
+  opacity: 0.3;
+}
+.slide-cover .cover-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ========================================
+   Slide Type: Content
+   ======================================== */
+.slide-content {
+  padding: 0;
+}
+.slide-content .slide-header {
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.slide-content .slide-header .page-number {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  font-weight: 600;
+}
+.slide-content .slide-header h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.slide-content .slide-body {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.slide-content .point-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.slide-content .point-item:last-child {
+  border-bottom: none;
+}
+.slide-content .point-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.slide-content .point-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+.slide-content .point-detail {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.3rem;
+}
+.slide-content .slide-footer {
+  padding: 0.8rem 2.5rem;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #999;
+}
+.slide-content .notes {
+  font-style: italic;
+  color: #888;
+}
+
+/* ========================================
+   Slide Type: Data
+   ======================================== */
+.slide-data .data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+.slide-data .data-card {
+  background: rgba(0,0,0,0.03);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+.slide-data .data-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+.slide-data .data-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+.slide-data .data-trend {
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
+.slide-data .data-trend.up { color: #16a34a; }
+.slide-data .data-trend.down { color: #dc2626; }
+.slide-data .data-trend.flat { color: #666; }
+
+/* ========================================
+   Slide Type: Summary
+   ======================================== */
+.slide-summary {
+  justify-content: center;
+  padding: 3rem;
+}
+.slide-summary h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.slide-summary .summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.slide-summary .summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-left: 4px solid;
+}
+.slide-summary .summary-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ========================================
+   Slide Type: End
+   ======================================== */
+.slide-end {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem;
+}
+.slide-end .end-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.slide-end .end-subtitle {
+  font-size: 1.3rem;
+  opacity: 0.8;
+  font-weight: 300;
+}
+
+/* ========================================
+   Thumbnail Styles
+   ======================================== */
+.thumbnail {
+  width: 120px;
+  height: 68px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.thumbnail:hover {
+  border-color: #93c5fd;
+}
+.thumbnail.active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+.thumbnail-content {
+  width: 240px;
+  height: 135px;
+  transform: scale(0.5);
+  transform-origin: top left;
+  pointer-events: none;
+}
+.thumbnail-number {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 9px;
+  color: #666;
+  background: rgba(255,255,255,0.8);
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+/* ========================================
+   Presentation Mode
+   ======================================== */
+#presentation-mode .ppt-slide {
+  font-size: 1.2em;
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+@media print {
+  .ppt-slide {
+    page-break-after: always;
+    border: 1px solid #ccc;
+  }
+}
+
+/* ========================================
+   Animation
+   ======================================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-animate {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.slide-animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.slide-animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.slide-animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.slide-animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
+.slide-animate-delay-5 { animation-delay: 0.5s; opacity: 0; }

@@ -523,3 +523,10 @@ function showToast(msg) {
     toast.style.opacity = '0';
   }, 2500);
 }
+
+// Expose functions to global scope for onclick handlers
+window.selectReportType = selectReportType;
+window.addPoint = addPoint;
+window.removePoint = removePoint;
+window.generateReport = generateReport;
+window.switchStyle = switchStyle;

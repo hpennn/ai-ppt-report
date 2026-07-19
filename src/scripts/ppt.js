@@ -718,3 +718,11 @@ function showToast(msg) {
     toast.style.opacity = '0';
   }, 2500);
 }
+
+// ========================================
+// Expose functions to global scope for onclick handlers
+// ========================================
+window.startGeneration = startGeneration;
+window.regenerateOutline = regenerateOutline;
+window.generateFullPPT = generateFullPPT;
+window.goToSlide = goToSlide;

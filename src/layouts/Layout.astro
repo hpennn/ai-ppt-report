@@ -1,12 +1,11 @@
 ---
-import '../styles/global.css';
-
 interface Props {
   title: string;
   description?: string;
+  currentPage?: string;
 }
 
-const { title, description = 'AI PPT 和工作汇报生成工具' } = Astro.props;
+const { title, description = 'AI PPT 和工作汇报生成工具', currentPage = 'home' } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,6 +16,38 @@ const { title, description = 'AI PPT 和工作汇报生成工具' } = Astro.prop
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                300: '#93c5fd',
+                400: '#60a5fa',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?BAIDU_STATS_ID";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
       
@@ -24,29 +55,26 @@ const { title, description = 'AI PPT 和工作汇报生成工具' } = Astro.prop
         font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
       }
       
-      /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #f1f5f9;
+        background: transparent;
         border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb {
-        background: #94a3b8;
+        background: #cbd5e1;
         border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #64748b;
+        background: #94a3b8;
       }
       
-      /* Smooth transitions */
       .transition-smooth {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      
-      /* Card hover effect */
+
       .card-hover {
         transition: all 0.3s ease;
       }
@@ -55,14 +83,112 @@ const { title, description = 'AI PPT 和工作汇报生成工具' } = Astro.prop
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
       }
 
-      /* Print styles */
       @media print {
         .no-print { display: none !important; }
         body { background: white !important; }
       }
+
+      /* Sidebar styles */
+      .sidebar {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      }
+      .nav-item {
+        transition: all 0.2s ease;
+        border-radius: 10px;
+        margin: 2px 0;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .nav-item.active {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+      }
+      .nav-item.active .nav-icon {
+        color: #60a5fa;
+      }
+
+      /* Chat bubble styles */
+      .ai-bubble {
+        background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+        border: 1px solid #e0f2fe;
+        border-radius: 16px;
+        border-top-left-radius: 4px;
+      }
+      .user-bubble {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border: 1px solid #bfdbfe;
+        border-radius: 16px;
+        border-top-right-radius: 4px;
+      }
+      .ai-avatar {
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      }
+
+      /* Typing animation */
+      @keyframes typing-dot {
+        0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+        30% { opacity: 1; transform: translateY(-4px); }
+      }
+      .typing-dot:nth-child(1) { animation: typing-dot 1.4s infinite 0s; }
+      .typing-dot:nth-child(2) { animation: typing-dot 1.4s infinite 0.2s; }
+      .typing-dot:nth-child(3) { animation: typing-dot 1.4s infinite 0.4s; }
     </style>
   </head>
   <body class="bg-gray-50 min-h-screen">
-    <slot />
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar w-60 shrink-0 flex flex-col no-print">
+        <!-- Logo -->
+        <div class="px-5 py-5 border-b border-white/10">
+          <a href="/" class="flex items-center gap-3 group">
+            <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-sm font-bold text-white leading-tight">AI 创作助手</h1>
+              <p class="text-[10px] text-slate-400">智能生成，高效呈现</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-3 py-4 space-y-1">
+          <a href="/" class={`nav-item flex items-center gap-3 px-3 py-2.5 text-sm ${currentPage === 'home' ? 'active' : 'text-slate-300'}`}>
+            <svg class="nav-icon w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span>首页</span>
+          </a>
+          <a href="/ppt" class={`nav-item flex items-center gap-3 px-3 py-2.5 text-sm ${currentPage === 'ppt' ? 'active' : 'text-slate-300'}`}>
+            <svg class="nav-icon w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span>AI PPT 生成</span>
+          </a>
+          <a href="/report" class={`nav-item flex items-center gap-3 px-3 py-2.5 text-sm ${currentPage === 'report' ? 'active' : 'text-slate-300'}`}>
+            <svg class="nav-icon w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>工作汇报生成</span>
+          </a>
+        </nav>
+
+        <!-- Footer -->
+        <div class="px-4 py-4 border-t border-white/10">
+          <div class="flex items-center gap-2 text-[10px] text-slate-500">
+            <div class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div>
+            <span>Powered by 豆包大模型</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 overflow-y-auto bg-gray-50">
+        <slot />
+      </main>
+    </div>
   </body>
 </html>

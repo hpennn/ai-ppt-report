@@ -3,23 +3,21 @@ import Layout from '../layouts/Layout.astro';
 import '../styles/ppt-themes.css';
 ---
 
-<Layout title="AI PPT 生成 - AI PPT & 汇报生成器">
-  <!-- Header -->
-  <header class="bg-white border-b border-gray-200 no-print sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+<Layout title="AI PPT 生成 - AI PPT & 汇报生成器" currentPage="ppt">
+  <div class="flex flex-col h-full">
+    <!-- Toolbar -->
+    <div class="shrink-0 bg-white border-b border-gray-200 px-5 py-2.5 flex items-center justify-between no-print">
       <div class="flex items-center gap-3">
-        <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-smooth">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-          </div>
-          <span class="font-bold text-gray-900">AI PPT 生成</span>
-        </a>
+        <div class="ai-avatar w-7 h-7 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h2 class="text-sm font-bold text-gray-900">AI PPT 生成</h2>
       </div>
       <div class="flex items-center gap-2">
-        <button id="btn-present" class="hidden items-center gap-1.5 px-3 py-1.5 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition-smooth" onclick="enterPresentation()">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <button id="btn-present" class="hidden items-center gap-1.5 px-3 py-1.5 bg-primary-600 text-white text-xs rounded-lg hover:bg-primary-700 transition-smooth" onclick="enterPresentation()">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           演示模式
         </button>
         <div id="theme-switcher" class="hidden flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-lg">
@@ -29,124 +27,148 @@ import '../styles/ppt-themes.css';
           <button onclick="switchTheme('vibrant')" class="theme-dot w-5 h-5 rounded-full bg-[#e65100] border-2 border-white shadow-sm" title="活力橙"></button>
           <button onclick="switchTheme('academic')" class="theme-dot w-5 h-5 rounded-full bg-[#1a237e] border-2 border-white shadow-sm" title="学术风"></button>
         </div>
-        <button id="btn-export" class="hidden items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200 transition-smooth" onclick="exportHTML()">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <button id="btn-export" class="hidden items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-lg hover:bg-gray-200 transition-smooth" onclick="exportHTML()">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           导出 HTML
         </button>
-        <a href="/report" class="text-sm text-gray-500 hover:text-gray-700 px-2 py-1.5">工作汇报 →</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <div class="max-w-7xl mx-auto px-4 py-6 flex gap-6 h-[calc(100vh-65px)]">
-    <!-- Left Panel: Config -->
-    <div id="config-panel" class="w-80 shrink-0 bg-white rounded-2xl border border-gray-200 p-6 overflow-y-auto no-print">
-      <h2 class="text-lg font-bold text-gray-900 mb-6">📊 PPT 配置</h2>
-
-      <!-- Topic -->
-      <div class="mb-5">
-        <label class="block text-sm font-medium text-gray-700 mb-1.5">演示主题 *</label>
-        <input id="ppt-topic" type="text" placeholder="如：2025年度工作总结" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none" />
-      </div>
-
-      <!-- Page Count -->
-      <div class="mb-5">
-        <label class="block text-sm font-medium text-gray-700 mb-1.5">页数</label>
-        <div class="flex items-center gap-3">
-          <input id="ppt-pages" type="range" min="5" max="20" value="10" class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600" oninput="document.getElementById('page-count-display').textContent=this.value+'页'" />
-          <span id="page-count-display" class="text-sm text-gray-600 w-10 text-right">10页</span>
-        </div>
-      </div>
-
-      <!-- Style -->
-      <div class="mb-5">
-        <label class="block text-sm font-medium text-gray-700 mb-1.5">配色主题</label>
-        <div class="grid grid-cols-5 gap-2">
-          <button onclick="selectStyle('business')" class="style-btn active group flex flex-col items-center gap-1 p-2 rounded-lg border-2 border-primary-500 bg-primary-50" data-style="business">
-            <div class="w-6 h-6 rounded-full bg-[#1a365d]"></div>
-            <span class="text-[10px] text-gray-600">商务</span>
-          </button>
-          <button onclick="selectStyle('tech')" class="style-btn group flex flex-col items-center gap-1 p-2 rounded-lg border-2 border-transparent hover:border-blue-300" data-style="tech">
-            <div class="w-6 h-6 rounded-full bg-[#0d47a1]"></div>
-            <span class="text-[10px] text-gray-600">科技</span>
-          </button>
-          <button onclick="selectStyle('fresh')" class="style-btn group flex flex-col items-center gap-1 p-2 rounded-lg border-2 border-transparent hover:border-green-300" data-style="fresh">
-            <div class="w-6 h-6 rounded-full bg-[#1b5e20]"></div>
-            <span class="text-[10px] text-gray-600">清新</span>
-          </button>
-          <button onclick="selectStyle('vibrant')" class="style-btn group flex flex-col items-center gap-1 p-2 rounded-lg border-2 border-transparent hover:border-orange-300" data-style="vibrant">
-            <div class="w-6 h-6 rounded-full bg-[#e65100]"></div>
-            <span class="text-[10px] text-gray-600">活力</span>
-          </button>
-          <button onclick="selectStyle('academic')" class="style-btn group flex flex-col items-center gap-1 p-2 rounded-lg border-2 border-transparent hover:border-indigo-300" data-style="academic">
-            <div class="w-6 h-6 rounded-full bg-[#1a237e]"></div>
-            <span class="text-[10px] text-gray-600">学术</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Description -->
-      <div class="mb-6">
-        <label class="block text-sm font-medium text-gray-700 mb-1.5">详细内容描述</label>
-        <textarea id="ppt-desc" rows="5" placeholder="描述 PPT 的具体内容要求，如：&#10;• 目标受众是谁&#10;• 需要包含哪些要点&#10;• 有什么特殊要求" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none resize-none"></textarea>
-      </div>
-
-      <!-- Generate Button -->
-      <button id="btn-generate" onclick="startGeneration()" class="w-full py-2.5 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-smooth flex items-center justify-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        生成大纲
-      </button>
-
-      <!-- Status -->
-      <div id="gen-status" class="mt-4 hidden">
-        <div class="flex items-center gap-2 text-sm text-gray-600">
-          <div class="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-          <span id="status-text">正在生成...</span>
-        </div>
       </div>
     </div>
 
-    <!-- Right Panel: Preview -->
-    <div class="flex-1 flex flex-col min-w-0">
-      <!-- Outline Editor (shown after outline generation) -->
-      <div id="outline-panel" class="hidden flex-1 bg-white rounded-2xl border border-gray-200 p-6 overflow-y-auto mb-4">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold text-gray-900">📋 PPT 大纲</h3>
-          <div class="flex gap-2">
-            <button onclick="regenerateOutline()" class="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-smooth">重新生成</button>
-            <button onclick="generateFullPPT()" class="px-3 py-1.5 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-smooth">确认并生成 PPT</button>
-          </div>
-        </div>
-        <div id="outline-content" class="space-y-3"></div>
-      </div>
-
-      <!-- PPT Preview -->
-      <div id="preview-panel" class="flex-1 flex flex-col">
-        <!-- Preview Area -->
-        <div id="ppt-preview" class="flex-1 bg-gray-100 rounded-2xl border border-gray-200 flex items-center justify-center overflow-hidden relative">
-          <!-- Empty State -->
-          <div id="empty-state" class="text-center text-gray-400">
-            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+    <!-- Main Content: Config + Preview -->
+    <div class="flex-1 flex gap-5 p-5 overflow-hidden">
+      <!-- Left: Config Panel (Chat-style Input) -->
+      <div id="config-panel" class="w-80 shrink-0 flex flex-col no-print">
+        <!-- AI prompt bubble -->
+        <div class="flex gap-2 mb-3">
+          <div class="ai-avatar w-6 h-6 rounded-lg flex items-center justify-center shrink-0">
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
-            <p class="text-lg font-medium">配置参数后点击生成</p>
-            <p class="text-sm mt-1">AI 将为你创建专业演示文稿</p>
           </div>
-          <!-- Slide Container -->
-          <div id="slide-container" class="hidden w-full h-full"></div>
+          <div class="ai-bubble px-3 py-2">
+            <p class="text-xs text-gray-600">请告诉我你想制作什么主题的 PPT？</p>
+          </div>
         </div>
 
-        <!-- Slide Navigation -->
-        <div id="slide-nav" class="hidden mt-3 flex items-center gap-3">
-          <button onclick="prevSlide()" class="p-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-smooth">
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <!-- Config Card -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-5 overflow-y-auto flex-1 shadow-sm">
+          <!-- Topic -->
+          <div class="mb-4">
+            <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wide">演示主题 *</label>
+            <input id="ppt-topic" type="text" placeholder="如：2025年度工作总结" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none bg-gray-50 focus:bg-white transition-smooth" />
+          </div>
+
+          <!-- Page Count -->
+          <div class="mb-4">
+            <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wide">页数</label>
+            <div class="flex items-center gap-3">
+              <input id="ppt-pages" type="range" min="5" max="20" value="10" class="flex-1 h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600" oninput="document.getElementById('page-count-display').textContent=this.value+'页'" />
+              <span id="page-count-display" class="text-xs text-gray-500 w-10 text-right bg-gray-100 px-1.5 py-0.5 rounded">10页</span>
+            </div>
+          </div>
+
+          <!-- Style -->
+          <div class="mb-4">
+            <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wide">配色主题</label>
+            <div class="grid grid-cols-5 gap-1.5">
+              <button onclick="selectStyle('business')" class="style-btn active group flex flex-col items-center gap-1 p-1.5 rounded-lg border-2 border-primary-500 bg-primary-50" data-style="business">
+                <div class="w-5 h-5 rounded-full bg-[#1a365d]"></div>
+                <span class="text-[9px] text-gray-600">商务</span>
+              </button>
+              <button onclick="selectStyle('tech')" class="style-btn group flex flex-col items-center gap-1 p-1.5 rounded-lg border-2 border-transparent hover:border-blue-300" data-style="tech">
+                <div class="w-5 h-5 rounded-full bg-[#0d47a1]"></div>
+                <span class="text-[9px] text-gray-600">科技</span>
+              </button>
+              <button onclick="selectStyle('fresh')" class="style-btn group flex flex-col items-center gap-1 p-1.5 rounded-lg border-2 border-transparent hover:border-green-300" data-style="fresh">
+                <div class="w-5 h-5 rounded-full bg-[#1b5e20]"></div>
+                <span class="text-[9px] text-gray-600">清新</span>
+              </button>
+              <button onclick="selectStyle('vibrant')" class="style-btn group flex flex-col items-center gap-1 p-1.5 rounded-lg border-2 border-transparent hover:border-orange-300" data-style="vibrant">
+                <div class="w-5 h-5 rounded-full bg-[#e65100]"></div>
+                <span class="text-[9px] text-gray-600">活力</span>
+              </button>
+              <button onclick="selectStyle('academic')" class="style-btn group flex flex-col items-center gap-1 p-1.5 rounded-lg border-2 border-transparent hover:border-indigo-300" data-style="academic">
+                <div class="w-5 h-5 rounded-full bg-[#1a237e]"></div>
+                <span class="text-[9px] text-gray-600">学术</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-5">
+            <label class="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wide">详细内容描述</label>
+            <textarea id="ppt-desc" rows="4" placeholder="描述 PPT 的具体内容要求，如：&#10;• 目标受众是谁&#10;• 需要包含哪些要点" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none resize-none bg-gray-50 focus:bg-white transition-smooth"></textarea>
+          </div>
+
+          <!-- Generate Button -->
+          <button id="btn-generate" onclick="startGeneration()" class="w-full py-2.5 bg-primary-600 text-white font-medium rounded-xl hover:bg-primary-700 transition-smooth flex items-center justify-center gap-2 shadow-lg shadow-primary-500/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            生成大纲
           </button>
-          <div id="thumbnail-strip" class="flex-1 flex gap-2 overflow-x-auto py-2 px-1"></div>
-          <button onclick="nextSlide()" class="p-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-smooth">
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </button>
-          <span id="slide-counter" class="text-sm text-gray-500 whitespace-nowrap">1 / 10</span>
+
+          <!-- Status -->
+          <div id="gen-status" class="mt-3 hidden">
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <div class="flex gap-1">
+                <div class="typing-dot w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
+                <div class="typing-dot w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
+                <div class="typing-dot w-1.5 h-1.5 bg-primary-500 rounded-full"></div>
+              </div>
+              <span id="status-text">正在生成...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Preview Area (Chat-style Output) -->
+      <div class="flex-1 flex flex-col min-w-0">
+        <!-- Outline Editor -->
+        <div id="outline-panel" class="hidden flex-1 bg-white rounded-2xl border border-gray-200 p-5 overflow-y-auto mb-3 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <div class="ai-avatar w-6 h-6 rounded-lg flex items-center justify-center">
+                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <h3 class="text-sm font-bold text-gray-900">PPT 大纲已生成</h3>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="regenerateOutline()" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-gray-50 transition-smooth">重新生成</button>
+              <button onclick="generateFullPPT()" class="px-3 py-1.5 text-xs bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-smooth">确认并生成 PPT</button>
+            </div>
+          </div>
+          <div id="outline-content" class="space-y-2"></div>
+        </div>
+
+        <!-- PPT Preview -->
+        <div id="preview-panel" class="flex-1 flex flex-col">
+          <div id="ppt-preview" class="flex-1 bg-gray-100 rounded-2xl border border-gray-200 flex items-center justify-center overflow-hidden relative">
+            <!-- Empty State -->
+            <div id="empty-state" class="text-center">
+              <div class="ai-avatar w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <p class="text-sm font-medium text-gray-500">配置参数后点击生成</p>
+              <p class="text-xs text-gray-400 mt-1">AI 将为你创建专业演示文稿</p>
+            </div>
+            <!-- Slide Container -->
+            <div id="slide-container" class="hidden w-full h-full"></div>
+          </div>
+
+          <!-- Slide Navigation -->
+          <div id="slide-nav" class="hidden mt-3 flex items-center gap-3">
+            <button onclick="prevSlide()" class="p-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-smooth">
+              <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div id="thumbnail-strip" class="flex-1 flex gap-2 overflow-x-auto py-2 px-1"></div>
+            <button onclick="nextSlide()" class="p-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-smooth">
+              <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <span id="slide-counter" class="text-xs text-gray-400 whitespace-nowrap">1 / 10</span>
+          </div>
         </div>
       </div>
     </div>
@@ -168,6 +190,9 @@ import '../styles/ppt-themes.css';
       </button>
     </div>
   </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm shadow-lg transform translate-y-20 opacity-0 transition-smooth z-50"></div>
 
   <script src="../scripts/ppt.js"></script>
 </Layout>

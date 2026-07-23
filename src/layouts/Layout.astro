@@ -40,15 +40,7 @@ const { title, description = 'AI PPT 和工作汇报生成工具', currentPage =
         }
       }
     </script>
-    <script>
-      var _hmt = _hmt || [];
-      (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?73343a8e76fb848fcd72584898448230";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-      })();
-    </script>
+    
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
       
@@ -135,7 +127,18 @@ const { title, description = 'AI PPT 和工作汇报生成工具', currentPage =
       .typing-dot:nth-child(2) { animation: typing-dot 1.4s infinite 0.2s; }
       .typing-dot:nth-child(3) { animation: typing-dot 1.4s infinite 0.4s; }
     </style>
-  </head>
+  
+  <!-- 百度统计 -->
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?73343a8e76fb848fcd72584898448230";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
   <body class="bg-gray-50 min-h-screen">
     <div class="flex h-screen overflow-hidden">
       <!-- Sidebar Navigation -->
